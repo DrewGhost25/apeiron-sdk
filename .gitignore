@@ -1,0 +1,8 @@
+.env
+node_modules/
+x402-gateway/
+x402-site/
+__pycache__/
+*.pyc
+dist/
+.env.local
