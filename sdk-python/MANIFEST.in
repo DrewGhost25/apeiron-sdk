@@ -1,0 +1,5 @@
+include README.md
+include .env.example
+exclude .env
+exclude *.pyc
+exclude __pycache__

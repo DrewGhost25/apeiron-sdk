@@ -4,7 +4,7 @@
 
 Apeiron is the most complete open-source implementation of the x402 protocol. It enables API providers, publishers, and AI labs to monetize digital resources with on-chain licensing and automated accounting on the Base blockchain.
 
-[![npm version](https://img.shields.io/npm/v/@apeiron/sdk)](https://www.npmjs.com/package/@apeiron/sdk)
+[![npm version](https://img.shields.io/npm/v/apeiron-sdk)](https://www.npmjs.com/package/apeiron-sdk)
 [![PyPI version](https://img.shields.io/pypi/v/apeiron-sdk)](https://pypi.org/project/apeiron-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Base](https://img.shields.io/badge/Base-Mainnet-0052FF)](https://basescan.org/address/0x6De5e0273428B14d88a690b200870f17888b0d77)
@@ -40,7 +40,7 @@ Native support for LangChain, CrewAI, Replit, Lovable, and Vibe Code. Monetize y
 ### Node.js
 
 ```bash
-npm install @apeiron/sdk
+npm install apeiron-sdk
 ```
 
 **Protect your API (Express.js)**
@@ -48,7 +48,7 @@ npm install @apeiron/sdk
 Turn your endpoint into a revenue stream by wrapping your handler with `withX402`:
 
 ```javascript
-const { withX402 } = require('@apeiron/sdk');
+const { withX402 } = require('apeiron-sdk');
 
 // This endpoint now charges $0.01 USDC for humans and $1.00 USDC for AI agents
 app.get('/api/premium-data', withX402(
@@ -106,7 +106,7 @@ Apeiron allows agents to become independent economic actors. Use `AgentWallet` t
 **Node.js**
 
 ```javascript
-const { AgentWallet } = require('@apeiron/sdk');
+const { AgentWallet } = require('apeiron-sdk');
 
 const agent = new AgentWallet({ privateKey: process.env.AGENT_KEY });
 

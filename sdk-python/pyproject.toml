@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apeiron-sdk"
+version = "1.0.0"
+description = "The business layer for the agentic web. Monetize your API with x402 protocol on Base blockchain."
+license = "MIT"
+authors = [{name = "Apeiron Protocol"}]
+keywords = ["x402", "blockchain", "base", "usdc", "ai-agents", "micropayments", "web3"]
+requires-python = ">=3.8"
+dependencies = [
+    "web3>=6.0.0",
+    "requests>=2.28.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/DrewGhost25/apeiron-sdk"
+Repository = "https://github.com/DrewGhost25/apeiron-sdk"
+
+[tool.setuptools]
+py-modules = ["client", "x402_server"]
