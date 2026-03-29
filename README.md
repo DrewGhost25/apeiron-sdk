@@ -1,165 +1,207 @@
 # Apeiron SDK
 
-> The payment layer for the agentic web. Monetize your API with one line of code — humans pay cents, AI agents pay licenses, automatically.
+> **The Business Layer for the Agentic Web.**
+
+Apeiron is the most complete open-source implementation of the x402 protocol. It enables API providers, publishers, and AI labs to monetize digital resources with on-chain licensing and automated accounting on the Base blockchain.
 
 [![npm version](https://img.shields.io/npm/v/@apeiron/sdk)](https://www.npmjs.com/package/@apeiron/sdk)
 [![PyPI version](https://img.shields.io/pypi/v/apeiron-sdk)](https://pypi.org/project/apeiron-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Base](https://img.shields.io/badge/Base-Mainnet-0052FF)](https://basescan.org/address/0x6De5e0273428B14d88a690b200870f17888b0d77)
 
 ---
 
-## What is Apeiron?
+## Why Apeiron?
 
-Apeiron is an open-source SDK that adds a **payment gateway** to any API endpoint using the [x402 protocol](https://x402.org) and USDC on Base blockchain.
+Existing x402 implementations are just "pipes". Apeiron is the financial infrastructure:
 
-- **For API providers**: wrap your endpoint with `withX402()` — done. You receive USDC instantly for every request.
-- **For AI agents**: use `AgentWallet` to automatically pay and access any x402-protected API.
-- **No subscriptions. No credit cards. No registration.**
+**Smart Differential Pricing**
+Automatically detect if the requester is a human or an AI agent. Serve a $0.01 "read-only" view to humans and a $1.00 "data-mining" license to bots — with a single line of code.
 
-```
-Human reader  →  $0.10 USDC  →  Instant access
-AI agent      →  $1.00 USDC  →  DATA_MINING_LICENSED (on-chain receipt)
-```
+**On-Chain Licensing**
+Every payment generates a cryptographic receipt (`DATA_MINING_LICENSED`) stored permanently on Base blockchain. Protect your IP and give AI agents legal safe-harbor from copyright claims.
 
----
+**Fair Tiered Fee Structure**
+10% fee for micro-payments under $10 USDC, 5% up to $100, 2% above. Fully configurable on-chain — no surprises, fully transparent, visible by anyone.
 
-## How it works
+**Flexible Publisher Pricing**
+Every API provider sets their own prices independently. A blogger charges $0.01/read, a financial data provider charges $50.00/AI license. Change anytime with a single transaction — no redeployment needed.
 
-```
-1. Agent calls your API
-2. Your API responds 402 Payment Required (with payment instructions)
-3. Agent reads instructions, pays USDC on Base blockchain
-4. Agent retries with wallet address
-5. Your API verifies payment on-chain → serves content
-```
+**CFO-Ready Accounting** *(Dashboard — coming soon)*
+Stop worrying about USDC bookkeeping. Our upcoming dashboard generates VAT-compliant PDF/XML reports with historical EUR/USD conversions — ready for your accountant.
 
-Everything is verified on the Base blockchain. No trusted intermediary.
+**Built for the Agentic Stack**
+Native support for LangChain, CrewAI, Replit, Lovable, and Vibe Code. Monetize your AI-generated apps in seconds with the `AgentWallet` client.
 
 ---
 
-## Quick Start — Node.js
+## Quick Start
 
-### Install
+### Node.js
 
 ```bash
 npm install @apeiron/sdk
 ```
 
-### Protect your API (Express)
+**Protect your API (Express.js)**
+
+Turn your endpoint into a revenue stream by wrapping your handler with `withX402`:
 
 ```javascript
 const { withX402 } = require('@apeiron/sdk');
 
-app.get('/api/data', withX402(
+// This endpoint now charges $0.01 USDC for humans and $1.00 USDC for AI agents
+app.get('/api/premium-data', withX402(
   async (req, res) => {
-    // If you reach here, payment is verified on-chain
-    res.json({ data: "Premium content", paidBy: req.x402.wallet });
+    // If you reach here, payment is verified on-chain.
+    res.json({
+      message: "This content is legally licensed.",
+      wallet:  req.x402.wallet,
+    });
   },
   {
-    contentUrl: 'https://yourapi.com/api/data',  // unique URL identifier
-    // price and gateway read from .env
+    contentUrl: 'https://yourapi.com/api/premium-data',
   }
 ));
 ```
 
-### Environment variables
+**Environment variables**
 
 ```bash
-X402_GATEWAY_ADDRESS=0x994De1C65DaA8c852542eFdc56163E667C50f364
+X402_GATEWAY_ADDRESS=0x6De5e0273428B14d88a690b200870f17888b0d77
 X402_USDC_ADDRESS=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
 X402_RPC_URL=https://mainnet.base.org
-X402_CONTENT_URL=https://yourapi.com/api/data
-```
-
-### Agent that pays automatically
-
-```javascript
-const { AgentWallet } = require('@apeiron/sdk');
-
-const agent = new AgentWallet({
-  privateKey: process.env.AGENT_PRIVATE_KEY,
-});
-
-// Automatically detects 402, pays, retries
-const data = await agent.fetch('https://yourapi.com/api/data');
-console.log(data);
+X402_CONTENT_URL=https://yourapi.com/api/premium-data
 ```
 
 ---
 
-## Quick Start — Python
-
-### Install
+### Python
 
 ```bash
 pip install apeiron-sdk
 ```
 
-### Protect your API (Flask)
+**Protect your API (Flask)**
 
 ```python
 from apeiron_sdk import with_x402
 
-@app.route('/api/data')
-@with_x402(content_url='https://yourapi.com/api/data')
+@app.route('/api/premium-data')
+@with_x402(content_url='https://yourapi.com/api/premium-data')
 def get_data():
-    # If you reach here, payment is verified on-chain
     x402 = request.environ['x402']
-    return jsonify({"data": "Premium content", "paidBy": x402['wallet']})
+    return jsonify({
+        "message": "This content is legally licensed.",
+        "wallet":  x402['wallet'],
+    })
 ```
 
-### Agent that pays automatically
+---
+
+## The Agent-to-Agent Economy
+
+Apeiron allows agents to become independent economic actors. Use `AgentWallet` to let your bot automatically pay for its own dependencies — no human intervention required.
+
+**Node.js**
+
+```javascript
+const { AgentWallet } = require('@apeiron/sdk');
+
+const agent = new AgentWallet({ privateKey: process.env.AGENT_KEY });
+
+// Automatically detects 402, pays USDC on Base, retries with proof of payment.
+const data = await agent.fetch('https://api.provider.com/premium-data');
+console.log(data);
+```
+
+**Python**
 
 ```python
 from apeiron_sdk import AgentWallet
 
-agent = AgentWallet()  # reads AGENT_PRIVATE_KEY from .env
+agent = AgentWallet()  # reads AGENT_KEY from .env
 
-# Automatically detects 402, pays, retries
-data = agent.fetch('https://yourapi.com/api/data')
+data = agent.fetch('https://api.provider.com/premium-data')
 print(data)
 ```
 
 ---
 
-## Register your content
+## Register Your Content
 
-Before accepting payments, register your content URL on the smart contract.
-You only need to do this once per endpoint.
+Before accepting payments, register your endpoint on the smart contract. You only need to do this once per URL.
 
 ```javascript
 const { ethers } = require('ethers');
 
 const GATEWAY_ABI = [
-  "function registerContent(bytes32 contentId, uint256 humanPrice, uint256 agentPrice, string calldata contentURI) external"
+  "function registerContent(bytes32 contentId, uint256 humanPrice, uint256 agentPrice, string calldata contentURI) external",
+  "function updatePrice(bytes32 contentId, uint256 newHumanPrice, uint256 newAgentPrice) external",
+  "function getFeeForAmount(uint256 amount) external view returns (uint256 fee, uint256 publisherReceives)"
 ];
 
 const provider = new ethers.JsonRpcProvider('https://mainnet.base.org');
 const signer   = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-const gateway  = new ethers.Contract(GATEWAY_ADDRESS, GATEWAY_ABI, signer);
+const gateway  = new ethers.Contract('0x6De5e0273428B14d88a690b200870f17888b0d77', GATEWAY_ABI, signer);
 
-const contentId = ethers.keccak256(ethers.toUtf8Bytes('https://yourapi.com/api/data'));
+// Compute contentId from your URL
+const contentId = ethers.keccak256(ethers.toUtf8Bytes('https://yourapi.com/api/premium-data'));
 
+// Register — every publisher sets their own prices independently
 await gateway.registerContent(
   contentId,
-  100000,     // 0.10 USDC for humans (6 decimals)
-  1000000,    // 1.00 USDC for AI agents (6 decimals)
-  'https://yourapi.com/api/data'
+  10000,       // $0.01 USDC for human readers  (6 decimals)
+  1000000,     // $1.00 USDC for AI agents       (6 decimals)
+  'https://yourapi.com/api/premium-data'
 );
+
+// Update prices anytime — no redeployment needed
+// Emits PriceChanged event on-chain for full audit history
+await gateway.updatePrice(contentId, 20000, 2000000);
+
+// Check fee breakdown before registering
+const [fee, publisherReceives] = await gateway.getFeeForAmount(1000000);
+// fee = 100000 (0.10 USDC), publisherReceives = 900000 (0.90 USDC)
 ```
 
 ---
 
-## Pricing
+## Pricing Reference
 
 USDC uses 6 decimals:
 
-| Amount | Units |
-|--------|-------|
-| $0.01 USDC | 10,000 |
-| $0.10 USDC | 100,000 |
-| $1.00 USDC | 1,000,000 |
-| $50.00 USDC | 50,000,000 |
+| Amount | Units | Typical use |
+|--------|-------|-------------|
+| $0.01 USDC | 10,000 | Human article read |
+| $0.10 USDC | 100,000 | Human premium content |
+| $1.00 USDC | 1,000,000 | AI agent license (small) |
+| $50.00 USDC | 50,000,000 | AI agent license (dataset) |
+
+---
+
+## Fee Structure
+
+Apeiron uses a tiered fee model — fairer for small publishers, competitive for enterprise:
+
+| Transaction size | Platform fee | Publisher receives |
+|-----------------|-------------|-------------------|
+| Up to $10 USDC | 10% | 90% |
+| $10 — $100 USDC | 5% | 95% |
+| Above $100 USDC | 2% | 98% |
+
+Fee parameters are configurable on-chain by the platform owner and fully visible to anyone. No hidden costs. No surprises.
+
+---
+
+## Access Types
+
+| Type | Value | Who | Duration |
+|------|-------|-----|----------|
+| `READ_ONLY` | 0 | Human readers | Permanent (default) or custom TTL |
+| `DATA_MINING_LICENSED` | 1 | AI agents / crawlers | Configurable (e.g. 30 days) |
+
+AI agents receive a permanent on-chain receipt — cryptographic proof of legal license that protects them from copyright claims.
 
 ---
 
@@ -169,40 +211,28 @@ Deployed on **Base Mainnet** (chainId: 8453):
 
 | Contract | Address |
 |----------|---------|
-| X402Gateway | `0x994De1C65DaA8c852542eFdc56163E667C50f364` |
-| USDC (Base) | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
+| X402Gateway Proxy | [`0x6De5e0273428B14d88a690b200870f17888b0d77`](https://basescan.org/address/0x6De5e0273428B14d88a690b200870f17888b0d77) |
+| X402Gateway Implementation | `0x6137D183058F1bcfC2093Bd3E2E673DDb08f8982` |
+| USDC (Base Mainnet) | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
 
-[View on BaseScan](https://basescan.org/address/0x994De1C65DaA8c852542eFdc56163E667C50f364)
+> The Proxy address is permanent and will never change. The implementation can be upgraded by the platform owner to add features — all upgrades are visible on-chain.
 
-**Revenue split**: 90% to publisher, 10% platform fee — distributed instantly on every payment.
-
----
-
-## Access Types
-
-| Type | Value | Who |
-|------|-------|-----|
-| `READ_ONLY` | 0 | Human readers |
-| `DATA_MINING_LICENSED` | 1 | AI agents / crawlers |
-
-AI agents receive an on-chain receipt proving they have a valid license — protecting them from copyright claims.
+[View on BaseScan](https://basescan.org/address/0x6De5e0273428B14d88a690b200870f17888b0d77)
 
 ---
 
-## Full Example
-
-Clone and run the demo:
+## Run the Demo
 
 ```bash
-git clone https://github.com/apeiron-protocol/sdk
-cd sdk/sdk-node
+git clone https://github.com/DrewGhost25/apeiron-sdk
+cd apeiron-sdk/sdk-node
 cp .env.example .env
-# Add your PRIVATE_KEY to .env
+# Add your keys to .env
 
-# Terminal 1 — start the server
+# Terminal 1 — start the protected API server
 node example-server.js
 
-# Terminal 2 — run the agent
+# Terminal 2 — run the AI agent (pays automatically)
 node example-agent.js
 ```
 
@@ -211,45 +241,56 @@ node example-agent.js
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                   Your API Server                    │
-│                                                      │
-│   app.get('/data', withX402(handler, options))       │
-│                    │                                 │
-│                    ▼                                 │
-│   ┌─────────────────────────────────────────┐       │
-│   │           Apeiron Middleware             │       │
-│   │                                         │       │
-│   │  1. Check User-Agent (human vs bot)     │       │
-│   │  2. No wallet → respond 402             │       │
-│   │  3. Wallet present → verify on-chain    │       │
-│   │  4. Verified → call your handler        │       │
-│   └─────────────────────────────────────────┘       │
-│                    │                                 │
-│                    ▼                                 │
-│         Base Blockchain (hasAccess)                  │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────┐
+│                  Your API / Content                   │
+│                                                       │
+│   withX402(handler)  /  @with_x402 decorator         │
+│                    │                                  │
+│                    ▼                                  │
+│   ┌──────────────────────────────────────────┐       │
+│   │           Apeiron Middleware              │       │
+│   │                                          │       │
+│   │  1. Detect requester (human vs AI bot)   │       │
+│   │  2. No wallet → respond 402              │       │
+│   │  3. Wallet present → verify on-chain     │       │
+│   │  4. Verified → serve content             │       │
+│   └──────────────────────────────────────────┘       │
+│                    │                                  │
+│                    ▼                                  │
+│         Base Blockchain · USDC · x402                │
+└──────────────────────────────────────────────────────┘
+
+AgentWallet flow:
+  GET /api/data  →  402 Payment Required
+       ↓
+  Read contentId + price from 402 response
+       ↓
+  USDC.approve() + gateway.unlockAsAgent()
+       ↓
+  GET /api/data  (with wallet header)  →  200 OK
 ```
 
 ---
 
 ## Roadmap
 
-- [x] Node.js SDK (server + client)
-- [x] Python SDK (server + client)
-- [ ] Dashboard for publishers
-- [ ] AI model aggregator (OpenAI, Anthropic, Groq — one USDC balance)
+- [x] Node.js SDK — `withX402` middleware + `AgentWallet` client
+- [x] Python SDK — `@with_x402` decorator + `AgentWallet` class
+- [x] Smart Contract V2 — upgradeable proxy, tiered fees, full price history on-chain
+- [ ] Publisher Dashboard — analytics, bot intelligence, fiscal reports
+- [ ] AI Agent Leaderboard — cross-market activity rankings
+- [ ] AI model aggregator — one USDC balance for OpenAI, Anthropic, Groq
 - [ ] WordPress plugin
-- [ ] Subscription model (pay-per-month cap)
+- [ ] Replit / Lovable native connector
+
+---
+
+## Contributing
+
+PRs welcome. Open an issue first to discuss what you'd like to change.
 
 ---
 
 ## License
 
 MIT © Apeiron Protocol
-
----
-
-## Contributing
-
-PRs welcome. Open an issue first to discuss what you would like to change.
