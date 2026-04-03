@@ -212,12 +212,22 @@ Deployed on **Base Mainnet** (chainId: 8453):
 | Contract | Address |
 |----------|---------|
 | X402Gateway Proxy | [`0x6De5e0273428B14d88a690b200870f17888b0d77`](https://basescan.org/address/0x6De5e0273428B14d88a690b200870f17888b0d77) |
-| X402Gateway Implementation | `0x6137D183058F1bcfC2093Bd3E2E673DDb08f8982` |
+| X402GatewayV3 Implementation | [`0x1061B6ABfbAd62Bc8aAF8718Ba75d165e278Dd3C`](https://basescan.org/address/0x1061B6ABfbAd62Bc8aAF8718Ba75d165e278Dd3C) |
 | USDC (Base Mainnet) | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
 
 > The Proxy address is permanent and will never change. The implementation can be upgraded by the platform owner to add features — all upgrades are visible on-chain.
 
 [View on BaseScan](https://basescan.org/address/0x6De5e0273428B14d88a690b200870f17888b0d77)
+
+---
+
+## Live Example
+
+**[Apeiron Reader](https://apeiron-reader.com)** — A real-world content paywall built on Apeiron Protocol.
+
+Publishers paste their articles, set independent prices for human readers and AI agents, and share a protected link. Every read is an on-chain USDC transaction on Base.
+
+> "Stop AI Scrapers. Start Charging Bots." — [apeiron-reader.com](https://apeiron-reader.com)
 
 ---
 
@@ -276,7 +286,7 @@ AgentWallet flow:
 
 - [x] Node.js SDK — `withX402` middleware + `AgentWallet` client
 - [x] Python SDK — `@with_x402` decorator + `AgentWallet` class
-- [x] Smart Contract V2 — upgradeable proxy, tiered fees, full price history on-chain
+- [x] Smart Contract V3 — independent human/AI pricing, upgradeable proxy, tiered fees, full price history on-chain
 - [ ] Publisher Dashboard — analytics, bot intelligence, fiscal reports
 - [ ] AI Agent Leaderboard — cross-market activity rankings
 - [ ] AI model aggregator — one USDC balance for OpenAI, Anthropic, Groq
